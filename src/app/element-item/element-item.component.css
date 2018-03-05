@@ -1,9 +1,30 @@
 .item {
-    height: 100px;
-    width: 100px;
-    border: 1px solid blue;
+    height: 250px;
+    width: 170px;
+    border: 1px solid gray;
     position: absolute;
     display: flex;
+    flex-direction: column;
+}
+.header {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    padding: 2px 5px;
+    border-bottom: solid 1px lightgray;
+}
+.title {
+    flex: 1;
+    text-align: center;
+}
+.body {
+    flex: 1;
+}
+.footer {
+    display: flex;
+    align-items: center;
+    padding: 2px 5px;
+    border-top: solid 1px lightgray;
+}
+.messageInput {
+    width: 100px;
 }
