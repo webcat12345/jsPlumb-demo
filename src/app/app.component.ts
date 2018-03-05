@@ -1,91 +1,54 @@
 import { Component, OnInit } from '@angular/core';
+import { ElementDataService } from './element-data.service';
+import { _ } from 'underscore';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
-  ELEMENT_ITEMS: any[] = [
-    {
-      uid: 'item-1',
-      position: {
-        left: 500,
-        top: 50
-      },
-      title: 'First Item'
-    },
-    {
-      uid: 'item-2',
-      position: {
-        left: 200,
-        top: 400
-      },
-      title: 'Second Item'
-    },
-    {
-      uid: 'item-3',
-      position: {
-        left: 500,
-        top: 400
-      },
-      title: 'Second Item'
-    },
-    {
-      uid: 'item-4',
-      position: {
-        left: 800,
-        top: 400
-      },
-      title: 'Second Item'
-    }
-  ];
+  elementItemArray: any[] = [];
+  elementUIDs: string[] = [];
+
+  constructor(public elementDataService: ElementDataService) {
+    this.elementUIDs = _.keys(elementDataService.elementItems);
+    this.elementUIDs.forEach(uid => {
+      const elementObj = elementDataService.elementItems[uid];
+      elementObj.uid = uid;
+      this.elementItemArray.push(elementObj);
+    });
+  }
 
   ngOnInit() {
+    const self: any = this;
     jsPlumb.ready(function() {
       jsPlumb.setContainer('diagramContainer');
-      const common: any = {
-        isSource: true,
-        isTarget: true,
-      };
-      jsPlumb.addEndpoint('item-1', {
-        anchors: ['Bottom']
-      }, common);
-      jsPlumb.addEndpoint('item-2', {
-        anchor: 'Top'
-      }, common);
-      jsPlumb.addEndpoint('item-3', {
-        anchor: 'Top'
-      }, common);
-      jsPlumb.addEndpoint('item-4', {
-        anchor: 'Top'
-      }, common);
 
-      jsPlumb.connect({
-          source: 'item-1',
-          target: 'item-2',
-          anchor: ['Bottom', 'Top'],
-          connector: ['Straight'],
+      self.elementUIDs.forEach(uid => {
+        jsPlumb.draggable(uid);
+        jsPlumb.addEndpoint(uid, {uuid: uid + 'Endpoint'}, {
+          anchors: ['Bottom', 'Top'],
+          maxConnections: -1,
+          isSource: true,
+          isTarget: true,
+        });
+        self.setupConnect(uid);
       });
+    });
+  }
 
+  setupConnect(uid: string) {
+    const self: any = this;
+    this.elementDataService.elementItems[uid].children.forEach(childUID => {
       jsPlumb.connect({
-          source: 'item-1',
-          target: 'item-3',
-          anchor: ['Bottom', 'Top'],
-          connector: ['Straight'],
+        source: uid,
+        target: childUID,
+        anchor: ['Bottom', 'Top'],
+        connector: ['Straight'],
       });
-
-      jsPlumb.connect({
-          source: 'item-1',
-          target: 'item-4',
-          anchor: ['Bottom', 'Top'],
-          connector: ['Straight'],
-      });
-
-      jsPlumb.draggable('item-1');
-      jsPlumb.draggable('item-2');
-      jsPlumb.draggable('item-3');
-      jsPlumb.draggable('item-4');
+      self.setupConnect(childUID);
     });
   }
 }

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { ElementItemComponent } from './element-item/element-item.component';
+import { ElementDataService } from './element-data.service';
 
 
 @NgModule({
@@ -14,7 +15,7 @@ import { ElementItemComponent } from './element-item/element-item.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [ElementDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
