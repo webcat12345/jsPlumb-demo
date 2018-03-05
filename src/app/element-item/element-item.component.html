@@ -1,7 +1,7 @@
 <div class="item" #elementItem id="{{uid}}">
   <div class="header">
     <div class="title">{{title}}</div>
-    <div><i class="fa fa-plus-circle"></i></div>
+    <div (click)="handlePlusClick($event)"><i class="fa fa-plus-circle"></i></div>
   </div>
   <div class="body">
   </div>

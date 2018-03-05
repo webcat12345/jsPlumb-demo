@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { ElementDataService } from '../element-data.service';
 
 @Component({
   selector: 'app-element-item',
@@ -16,7 +17,7 @@ export class ElementItemComponent implements OnInit {
   uid = '';
   title = '';
 
-  constructor() { }
+  constructor(private elementDataService: ElementDataService) { }
 
   ngOnInit() {
     this.position = this.elementData.position;
@@ -26,4 +27,7 @@ export class ElementItemComponent implements OnInit {
     this.elementItem.nativeElement.style.top = this.elementData.position.top + 'px';
   }
 
+  handlePlusClick(event) {
+    this.elementDataService.addNewElement(this.uid);
+  }
 }
