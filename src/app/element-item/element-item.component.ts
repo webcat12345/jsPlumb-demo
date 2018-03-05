@@ -7,14 +7,14 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 })
 export class ElementItemComponent implements OnInit {
   @Input() elementData: any;
-  @ViewChild("elementItem") elementItem: ElementRef;
+  @ViewChild('elementItem') elementItem: ElementRef;
 
   position: any = {
     left: 0,
     top: 0
-  }
-  uid: string = '';
-  title: string = '';
+  };
+  uid = '';
+  title = '';
 
   constructor() { }
 
