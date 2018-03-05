@@ -1,3 +1,9 @@
-<div class="container" id="diagramContainer">
-    <app-element-item *ngFor="let element of ELEMENT_ITEMS" [elementData]="element"></app-element-item>
+<!--<div class="container" id="diagramContainer">-->
+    <!--<app-element-item *ngFor="let element of ELEMENT_ITEMS" [elementData]="element"></app-element-item>-->
+<!--</div>-->
+<div class="container">
+  <app-go-diagram-editor
+    [model]="model"
+    (nodeSelected)="showDetails($event)"
+    (modelChanged)="onModelChanged($event)"></app-go-diagram-editor>
 </div>

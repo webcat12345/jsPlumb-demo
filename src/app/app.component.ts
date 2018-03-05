@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import * as go from 'gojs';
 
 @Component({
   selector: 'app-root',
@@ -6,43 +7,46 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  ELEMENT_ITEMS: any[] = [
-    {
-      uid: 'item-1',
-      position: {
-        left: 500,
-        top: 50
-      },
-      title: 'First Item'
-    },
-    {
-      uid: 'item-2',
-      position: {
-        left: 200,
-        top: 300
-      },
-      title: 'Second Item'
+  model = new go.GraphLinksModel([], []);
+
+  @ViewChild('text')
+  private textField: ElementRef;
+
+  data: any;
+  node: go.Node;
+
+  showDetails(node: go.Node | null) {
+    // this.node = node;
+    // if (node) {
+    //   // copy the editable properties into a separate Object
+    //   this.data = {
+    //     text: node.data.text,
+    //     color: node.data.color
+    //   };
+    // } else {
+    //   this.data = null;
+    // }
+  }
+
+  onCommitDetails() {
+    if (this.node) {
+      const model = this.node.diagram.model;
+      // copy the edited properties back into the node's model data,
+      // all within a transaction
+      model.startTransaction();
+      model.setDataProperty(this.node.data, 'text', this.data.text);
+      model.setDataProperty(this.node.data, 'color', this.data.color);
+      model.commitTransaction('modified properties');
     }
-  ]
+  }
 
-  ngOnInit(){
-        jsPlumb.ready(function() {
-            jsPlumb.setContainer("diagramContainer");
-            let common: any = {
-              isSource: true,
-              isTarget: true,
-            };
-            
-            jsPlumb.addEndpoint("item-1", { 
-              anchors:["Bottom"]
-            }, common); 
-            
-            jsPlumb.addEndpoint("item-2", { 
-              anchor:"Top"
-            }, common);
+  onCancelChanges() {
+    // wipe out anything the user may have entered
+    this.showDetails(this.node);
+  }
 
-            jsPlumb.draggable('item-1');
-            jsPlumb.draggable('item-2');
-        });
+  onModelChanged(c: go.ChangedEvent) {
+    // who knows what might have changed in the selected node and data?
+    this.showDetails(this.node);
   }
 }
